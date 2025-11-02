@@ -42,3 +42,11 @@ repos:
           - types-setuptools
         args: [--ignore-missing-imports]
         files: ^src/.*\.py$
+
+  - repo: https://github.com/thlorenz/doctoc
+    rev: v2.2.0
+    hooks:
+      - id: doctoc
+        name: Generate/update table of contents in README
+        args: [--github, --title, '## Table of Contents']
+        files: ^README\.md$

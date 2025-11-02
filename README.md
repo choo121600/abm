@@ -8,6 +8,69 @@
 
 Manage multiple Airflow development environments with isolated breeze instances for Apache Airflow development.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of Contents
+
+- [Why ABM?](#why-abm)
+- [Installation](#installation)
+  - [Using uvx (Recommended)](#using-uvx-recommended)
+  - [Using uv for Development](#using-uv-for-development)
+- [Quick Start](#quick-start)
+  - [1. Initialize ABM](#1-initialize-abm)
+  - [2. Create a Project](#2-create-a-project)
+  - [3. Work on Your Project](#3-work-on-your-project)
+  - [4. Manage Projects](#4-manage-projects)
+- [How It Works](#how-it-works)
+  - [Port Isolation](#port-isolation)
+  - [Docker & Database Isolation](#docker--database-isolation)
+  - [UI Identification](#ui-identification)
+  - [Git Worktrees](#git-worktrees)
+  - [Project-Specific Documentation](#project-specific-documentation)
+    - [`PROJECT.md`](#projectmd)
+    - [`CLAUDE.md`](#claudemd)
+- [Commands Reference](#commands-reference)
+  - [Core Commands](#core-commands)
+    - [`abm init`](#abm-init)
+    - [`abm add <name>`](#abm-add-name)
+    - [`abm adopt <worktree_path>`](#abm-adopt-worktree_path)
+    - [`abm disown [project]`](#abm-disown-project)
+    - [`abm list`](#abm-list)
+    - [`abm status [project]`](#abm-status-project)
+    - [`abm shell [project]`](#abm-shell-project)
+    - [`abm run [project] <command...>`](#abm-run-project-command)
+    - [`abm remove <project>`](#abm-remove-project)
+  - [Docker Commands](#docker-commands)
+    - [`abm docker up [project]`](#abm-docker-up-project)
+    - [`abm docker down [project]`](#abm-docker-down-project)
+  - [GitHub PR Commands](#github-pr-commands)
+    - [`abm pr link <pr_number> [project]`](#abm-pr-link-pr_number-project)
+    - [`abm pr open [project]`](#abm-pr-open-project)
+    - [`abm pr clear [project]`](#abm-pr-clear-project)
+  - [Disk Space Management](#disk-space-management)
+    - [`abm freeze <project>`](#abm-freeze-project)
+    - [`abm thaw <project>`](#abm-thaw-project)
+    - [`abm setup-autocomplete`](#abm-setup-autocomplete)
+    - [`abm start-airflow [project]`](#abm-start-airflow-project)
+- [Configuration](#configuration)
+  - [Environment Variables](#environment-variables)
+  - [Files & Directories](#files--directories)
+  - [Documentation Files](#documentation-files)
+- [Development Workflow](#development-workflow)
+  - [Typical Multi-Branch Workflow](#typical-multi-branch-workflow)
+  - [Working with Claude Code](#working-with-claude-code)
+  - [Testing Multiple Branches](#testing-multiple-branches)
+- [Troubleshooting](#troubleshooting)
+  - [Port Conflicts (Automatically Handled!)](#port-conflicts-automatically-handled)
+  - [Worktree Already Exists](#worktree-already-exists)
+  - [Docker Containers Won't Start](#docker-containers-wont-start)
+  - [Project is Frozen](#project-is-frozen)
+  - [Development Setup](#development-setup)
+- [License](#license)
+- [Credits](#credits)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Why ABM?
 
 In today's AI-assisted development world, where Claude Code and other AI tools can generate code rapidly, **environment bottlenecks have become the new limiting factor**. You're no longer waiting for code to be written—you're waiting for environments to spin up.

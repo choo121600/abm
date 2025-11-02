@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Updated minimum dependency versions: `typer>=0.20.0`, `rich>=14.0.0`, `docker>=7.0.0`
+
 ## [0.2.0] - 2025-11-02
 
 ### Added
