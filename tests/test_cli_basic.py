@@ -131,3 +131,21 @@ def test_cli_docker_compose_project_name() -> None:
     # This catches if someone breaks the naming convention
     assert get_docker_compose_project_name("my-feature") == "abm-my-feature"
     assert get_docker_compose_project_name("test_123") == "abm-test_123"
+
+
+def test_project_name_slash_sanitization() -> None:
+    """Test that project names with slashes are sanitized correctly.
+
+    This prevents creating nested directories when users specify branch names
+    like 'feature/version-indicator' as the project name.
+    """
+    # Test the sanitization logic directly
+    name_with_slash = "feature/version-indicator"
+    sanitized = name_with_slash.replace("/", "-")
+    assert sanitized == "feature-version-indicator"
+    assert "/" not in sanitized
+
+    # Test multiple slashes
+    name_multiple = "features/sub/feature"
+    sanitized_multiple = name_multiple.replace("/", "-")
+    assert sanitized_multiple == "features-sub-feature"

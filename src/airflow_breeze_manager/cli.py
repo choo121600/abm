@@ -195,14 +195,22 @@ def add(
     """Add a new project with isolated environment."""
     config = get_config()
 
+    # Sanitize project name - replace slashes with dashes (like branch names "feature/foo" -> "feature-foo")
+    project_name = name.replace("/", "-")
+
+    # Warn if name was changed
+    if project_name != name:
+        console.print(f"[yellow]Note: Project name sanitized from '{name}' to '{project_name}'[/yellow]")
+        console.print("[dim]Slashes in project names are not allowed (they create nested directories)[/dim]")
+
     # Check if project already exists
-    if get_project(name):
-        console.print(f"[red]Project '{name}' already exists.[/red]")
+    if get_project(project_name):
+        console.print(f"[red]Project '{project_name}' already exists.[/red]")
         raise typer.Exit(1)
 
     branch = branch or name
     repo_path = Path(config.airflow_repo)
-    worktree_path = Path(config.worktree_base) / name
+    worktree_path = Path(config.worktree_base) / project_name
 
     # Check if worktree already exists
     if worktree_path.exists():
@@ -232,12 +240,12 @@ def add(
     run_command(["git", "worktree", "add", str(worktree_path), branch], cwd=repo_path)
 
     # Create project directory
-    project_dir = PROJECTS_DIR / name
+    project_dir = PROJECTS_DIR / project_name
     project_dir.mkdir(parents=True, exist_ok=True)
 
     # Create project metadata
     project = ProjectMetadata(
-        name=name,
+        name=project_name,
         branch=branch,
         worktree_path=str(worktree_path),
         ports=ports,
@@ -251,7 +259,7 @@ def add(
     # Create PROJECT.md template
     project_md = project_dir / "PROJECT.md"
     if not project_md.exists():
-        project_md.write_text(f"""# {name}
+        project_md.write_text(f"""# {project_name}
 
 ## Description
 {project.description}
@@ -276,7 +284,7 @@ Add your notes here...
     if not claude_md.exists():
         claude_md.write_text(f"""# Project Context for AI Assistants
 
-## Project: {name}
+## Project: {project_name}
 
 ### Branch
 `{branch}`
@@ -318,12 +326,12 @@ Add your notes here...
     env_vars = []
 
     # Set instance name for UI identification
-    env_vars.append(f'AIRFLOW__API__INSTANCE_NAME="ABM: {name}"')
+    env_vars.append(f'AIRFLOW__API__INSTANCE_NAME="ABM: {project_name}"')
 
     # Use project-specific database name for Postgres/MySQL isolation
     if backend in ("postgres", "mysql"):
         # Sanitize project name for database naming (replace hyphens with underscores)
-        db_name = f"airflow_{name.replace('-', '_')}"
+        db_name = f"airflow_{project_name.replace('-', '_')}"
         env_vars.append("# Database isolation - each project gets its own database")
         env_vars.append(f"ABM_DB_NAME={db_name}")
         if backend == "postgres":
@@ -385,7 +393,7 @@ fi
     else:
         console.print("[dim]Note: .cursor not found in main Airflow repo (it's gitignored)[/dim]")
 
-    console.print(f"✅ [green]Project '{name}' created successfully![/green]")
+    console.print(f"✅ [green]Project '{project_name}' created successfully![/green]")
     console.print(f"   Branch: {branch}")
     console.print(f"   Worktree: {worktree_path}")
     console.print(f"   Webserver: http://localhost:{ports.webserver}")

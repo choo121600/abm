@@ -84,6 +84,10 @@ Default worktree base: `~/code/airflow-worktree`
 # Create a new project for feature development
 abm add my-feature --create-branch
 
+# Use branch name directly (slash sanitized automatically)
+abm add feature/version-indicator --branch feature/version-indicator
+# → Creates project "feature-version-indicator" for branch "feature/version-indicator"
+
 # Enter breeze shell
 abm shell my-feature
 
@@ -96,6 +100,7 @@ abm start-airflow my-feature
 - Allocates unique ports for all services
 - Creates a PROJECT.md file for branch-specific notes
 - Sets up isolated environment configuration
+- **Note:** Project names with slashes are automatically sanitized (e.g., `feature/foo` → `feature-foo`)
 
 ### 3. Work on Your Project
 
