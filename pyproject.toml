@@ -14,7 +14,7 @@ dev = [
 
 [project]
 name = "airflow-breeze-manager"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Manage multiple Airflow development environments with isolated breeze instances"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -68,6 +68,9 @@ dev = [
 [project.scripts]
 abm = "airflow_breeze_manager.cli:app"
 airflow-breeze-manager = "airflow_breeze_manager.cli:app"
+
+[tool.hatch.version]
+path = "src/airflow_breeze_manager/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/airflow_breeze_manager"]
