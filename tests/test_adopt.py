@@ -5,7 +5,6 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-import pytest
 from typer.testing import CliRunner
 
 from airflow_breeze_manager.cli import app
@@ -98,7 +97,6 @@ def test_resolve_project_from_path_existing(tmp_abm_home, sample_project):
     assert result == sample_project.name
 
 
-@pytest.mark.integration
 def test_adopt_command_success(tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, mock_docker):
     """Test successfully adopting a worktree."""
     # Save config
@@ -121,7 +119,6 @@ def test_adopt_command_success(tmp_abm_home, mock_airflow_repo, create_worktree,
     assert Path(project.worktree_path) == worktree_path
 
 
-@pytest.mark.integration
 def test_adopt_command_custom_name(tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, mock_docker):
     """Test adopting a worktree with a custom project name."""
     # Save config
@@ -144,7 +141,6 @@ def test_adopt_command_custom_name(tmp_abm_home, mock_airflow_repo, create_workt
     assert project.managed_worktree is False
 
 
-@pytest.mark.integration
 def test_adopt_command_idempotent(tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, mock_docker):
     """Test that adopting the same worktree twice is idempotent."""
     # Save config
@@ -162,7 +158,6 @@ def test_adopt_command_idempotent(tmp_abm_home, mock_airflow_repo, create_worktr
     assert "idempotent" in result.stdout.lower()
 
 
-@pytest.mark.integration
 def test_adopt_command_invalid_path(tmp_abm_home, sample_global_config, tmp_path):
     """Test adopting an invalid path."""
     # Save config
@@ -175,7 +170,6 @@ def test_adopt_command_invalid_path(tmp_abm_home, sample_global_config, tmp_path
     assert "Invalid worktree" in result.stdout
 
 
-@pytest.mark.integration
 def test_adopt_command_project_name_conflict(
     tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, sample_project, mock_docker
 ):
@@ -200,7 +194,6 @@ def test_adopt_command_project_name_conflict(
     assert "Use --name" in result.stdout
 
 
-@pytest.mark.integration
 def test_adopt_command_sanitizes_branch_names(tmp_abm_home, mock_airflow_repo, sample_global_config, mock_docker):
     """Test that branch names with slashes are sanitized."""
     # Save config

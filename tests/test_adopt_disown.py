@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
 from typer.testing import CliRunner
 
 from airflow_breeze_manager.cli import app
@@ -11,7 +10,6 @@ from airflow_breeze_manager.utils import get_project
 runner = CliRunner()
 
 
-@pytest.mark.integration
 def test_disown_command_success(tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, mock_docker):
     """Test successfully disowning a project."""
     # Save config
@@ -38,7 +36,6 @@ def test_disown_command_success(tmp_abm_home, mock_airflow_repo, create_worktree
     assert worktree_path.exists()
 
 
-@pytest.mark.integration
 def test_disown_command_requires_confirmation(
     tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, mock_docker
 ):
@@ -58,7 +55,6 @@ def test_disown_command_requires_confirmation(
     assert get_project("feature-1") is not None
 
 
-@pytest.mark.integration
 def test_remove_adopted_project_requires_force(
     tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, mock_docker
 ):
@@ -82,7 +78,6 @@ def test_remove_adopted_project_requires_force(
     assert get_project("feature-1") is not None
 
 
-@pytest.mark.integration
 def test_remove_adopted_project_with_force(
     tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, mock_docker
 ):
@@ -104,7 +99,6 @@ def test_remove_adopted_project_with_force(
     assert get_project("feature-1") is None
 
 
-@pytest.mark.integration
 def test_remove_managed_project_no_force_needed(tmp_abm_home, mock_airflow_repo, sample_global_config, mock_docker):
     """Test that removing a managed project doesn't require --force."""
     # Save config
@@ -125,7 +119,6 @@ def test_remove_managed_project_no_force_needed(tmp_abm_home, mock_airflow_repo,
         assert project.managed_worktree is True
 
 
-@pytest.mark.integration
 def test_adopt_then_disown_then_readopt(
     tmp_abm_home, mock_airflow_repo, create_worktree, sample_global_config, mock_docker
 ):
